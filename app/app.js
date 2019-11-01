@@ -33,25 +33,30 @@ var defineData = () => {
     v = {
         blocked_posts : Array(),
         posts: Array(),
-        blocked_count : 0
+        blocked_count : 0,
+        blocked_comment_count : 0
     };
 }
 
 // initialize
 var init = () =>{
     defineData();
+    loadOptions();
     chrome.runtime.sendMessage({msg:"init", data: local_data}, function(result){
         // data sync with local storage
         if(result != undefined)
             local_data = result;
-        console.log("local_data is ...");
-        console.table(local_data.blocked_members);
+
         // get posts from document
         collectPosts();
         // block posts
-        blockPosts();
+        if (options.post.enable)
+            blockPosts();
+        if (options.comment.enable)
+            blockComments();
         // create block button
         createButton();
+        waitComments();
     });
 };
 
@@ -64,22 +69,38 @@ var blockPosts = () => {
     if(v.posts.length != 0 && local_data.blocked_members.length !=0){
         v.posts.forEach((post) => {
             var num = post.querySelector('td.author').children[0]
-                                                     .className
-                                                     .match(/\d+/g)[0];
+                                                    .className
+                                                    .match(/\d+/g)[0];
             var idx = local_data.blocked_members.findIndex(x => x.member_num == num);
             if(idx > -1){
                 v.blocked_posts.push(post);
                 v.blocked_count++;
                 post.hidden = true;
             }
-            if(admin_number.includes(num)){
+            if(admin_number.includes(num) && options.general.noticeBlock){
                 v.blocked_posts.push(post);
                 post.hidden =true;
             }
         });
     }
     updateBlockCounter();
-}
+};
+
+var blockComments = () => {
+    if(document.getElementsByClassName("comment-item").length != 0){
+        var comments = document.getElementsByClassName("comment-item");
+        var users = document.getElementsByClassName("comment-list")[0].querySelectorAll(".link-reset");
+        users = Array.from(users).map(x => x.className.match(/(\d+)/)[0]);
+
+        for(var i=0; i<comments.length;i++){
+            if(local_data.blocked_members.findIndex(x=> x.member_num == users[i]) > -1){
+                comments[i].hidden = true;
+                v.blocked_comment_count++;
+            }
+        }
+        updateBlockCounter();
+    }
+};
 
 var addBlockMember = (post, num, mm) => {
 
@@ -98,20 +119,24 @@ var addBlockMember = (post, num, mm) => {
             console.log("addBlockMember - duplication exists or error occured");
     });
     // hide post
-    v.blocked_posts.push(post);
-    v.blocked_count++;
+    if(document.getElementsByClassName("board-list")[0].contains(post)){
+        v.blocked_posts.push(post);
+        v.blocked_count++;
+    }else{
+        v.blocked_comment_count++;
+    }
     post.hidden = true;
 
     updateBlockCounter();
 };
 
 var updateBlockCounter = () =>{
-    var counter = document.getElementById("blockCounter");
-
+    var counter = document.getElementById("pBlockCounter");
+    
     if(counter == null){
         counter = document.createElement('b');
         counter.innerHTML = "차단 글 수 - " + v.blocked_count.toString();
-        counter.id = "blockCounter";
+        counter.id = "pBlockCounter";
         counter.setAttribute("style", "color:red; margin-left: 10px;");
 
         var upper_menu = document.querySelector(
@@ -122,7 +147,22 @@ var updateBlockCounter = () =>{
     }else{
         counter.innerHTML = "차단 글 수 - " + v.blocked_count.toString();
     }
-};
+
+    var comment_counter = document.getElementById("cBlockCounter");
+
+    if(document.getElementById("comment_top") != null){
+        if(comment_counter == null){
+            comment_counter = document.createElement('b');
+            comment_counter.innerHTML = "차단 댓글 수 - " + v.blocked_comment_count.toString();
+            comment_counter.id = "cBlockCounter";
+            comment_counter.setAttribute("style", "color:red; margin-top:35px; margin-left: 15px;");
+
+            document.querySelector("#commentbox div div").appendChild(comment_counter)
+        }else{
+            comment_counter.innerHTML = "차단 댓글 수 - " + v.blocked_comment_count.toString();
+        }
+    }
+}; 
 
 function createButton(){
     document.addEventListener('DOMSubtreeModified', (evt)=>{
@@ -137,7 +177,10 @@ function createButton(){
 
                 document.getElementById("addBlock").addEventListener('click', (evt) =>{
                     var memo = prompt("메모할 내용?");
+
+                    // for post
                     var authors = document.querySelectorAll('td.author');
+
                     Array.from(authors).forEach((author) =>{
                         var num = author.children[0].className.match(/\d+/g)[0];
                         if(num == member){
@@ -145,10 +188,36 @@ function createButton(){
                             addBlockMember(author.parentElement, num, memo);
                         }
                     });
+
+                    // when comment section is exists
+                    if(document.getElementById("comment_top") != null){
+                        var comments = document.getElementsByClassName("comment-item");
+                        var comment_authors = document.getElementsByClassName("comment-list")[0]
+                                                      .querySelectorAll(".link-reset");
+
+                        Array.from(comment_authors).forEach((author) => {
+                            var num = author.className.match(/(\d+)/)[0];
+                            if(num == member){
+                                // add to local storage list and block post
+                                addBlockMember(author.parentNode.parentNode.parentNode.parentNode.parentNode, num, memo);
+                            }
+                        })
+                    }
                 });
             }
         }
     });
-}
+};
+
+function waitComments(){
+    if(document.getElementById("comment_top") != null){
+        var observer = new MutationObserver((mutations)=>{
+            blockComments();
+        });
+        observer.observe(document.getElementById("comment_top"),{
+            childList: true
+        });
+    }
+};
 
 init();
