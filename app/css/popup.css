@@ -1,0 +1,73 @@
+html, body {
+    height: 500px;
+    width: 400px;
+    background-color:lightgray;
+}
+#dpp_title, .pure-menu, #about-content{
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+.pure-menu-link{
+    font-weight: 900;
+}
+
+#blocked-list{
+    overflow: hidden;
+    overflow-y: hidden;
+    list-style-type: none;
+}
+.remove-btn{
+    color: white;
+    border-radius: 5px;
+    background: rgb(202,60,60);
+    font-size: 7px;
+    font-weight:900;
+    border: 2px solid rgb(202,60,60);
+}
+.title-div{
+    background-color:white;
+    padding: 1.5em;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.memo-input{
+    width: 100%;
+    box-sizing: border-box;
+    border:none;
+    background-color:lightgray;
+}
+#tbody{
+    height: 270px;
+    overflow-y:visible;
+}
+#tbody::-webkit-scrollbar{
+    width:10px !important;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(225, 225, 225, 0.01); 
+}
+
+#data-table td{
+    height: 14px;
+}
+#data-table td:nth-child(1),
+#table-header th:nth-child(1){
+    width: 67px;
+}
+#data-table td:nth-child(2),
+#table-header th:nth-child(2){
+    width: 65px;
+}
+
+#data-table td:nth-child(4),
+#table-header th:nth-child(4){
+    width: 37px;
+    text-align: center;
+    padding:0px;
+}

@@ -1,0 +1,35 @@
+{
+    "name" : "dogdrip++",
+    "version" : "0.1",
+    "icons": {
+        "128": "img/128.png"
+    },
+    "permissions":[
+        "storage",
+        "activeTab"
+    ],
+    "description" : "extension to provide better experience for dogdrip.net",
+    "manifest_version": 2,
+    "browser_action":{
+        "default_popup": "app/popup.html"
+    },
+    "background":{
+        "scripts": ["app/background.js"],
+        "persistent": false
+    },
+    "content_scripts":[{
+        "matches":[
+            "*://www.dogdrip.net/*"
+        ],
+        "exclude_matches":[
+            "https://www.dogdrip.net/",
+            "https://www.dogdrip.net/free",
+            "https://www.dogdrip.net/communitypage", 
+            "https://www.dogdrip.net/notice"
+        ],
+        "js": [
+            "app/options.js",
+            "app/app.js"
+        ]
+    }]
+}
