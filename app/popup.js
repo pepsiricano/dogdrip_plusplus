@@ -1,10 +1,12 @@
 window.onload = function(){
     console.log("opened" + this.Date());
+    
     document.getElementById('wipeall-btn').onclick = () =>{
         this.wipeAllData();
     }
-    postblocklist();
-
+    
+    loadOptions();
+    blockList();
     addActions();
 }
 
@@ -19,11 +21,51 @@ var tools = {
     },
     reloadPage : function(){
         chrome.tabs.reload();
+    }, 
+    readOption : function(){
+        var options = {};
+        var post = {};
+        var comment = {};
+        var general = {};
+        post["enable"] = document.getElementById("enablePostBlock").checked;
+        post["method"] = document.getElementById("postBlockMethod").value;
+
+        comment["enable"] = document.getElementById("enableCommentBlock").checked;
+        comment["method"] = document.getElementById("commentBlockMethod").value;
+
+        general["noticeBlock"] = document.getElementById("enableNoticeBlock").checked;
+        options["post"] = post;
+        options["comment"] = comment;
+        options["general"] = general;
+
+        console.log(options);
+        return options;
     }
 }
 
-var postblocklist = () => {
-    console.log("postblocklist() called");
+var loadOptions = () => {
+    chrome.runtime.sendMessage({msg:"getOptions"}, function(response){
+        var options = response;
+        console.log(options);
+        document.getElementById("enablePostBlock").checked = options.post.enable;
+        document.getElementById("postBlockMethod").value = options.post.method;
+
+        document.getElementById("enableCommentBlock").checked = options.comment.enable;
+        document.getElementById("commentBlockMethod").value = options.comment.method;
+
+        document.getElementById("enableNoticeBlock").checked = options.general.noticeBlock;
+    })
+};
+
+var setOptions = (options) => {
+    chrome.runtime.sendMessage({msg: "setOptions", data: options}, function(response){
+        if(response){
+            tools.reloadPage();
+        }
+    });
+}
+
+var blockList = () => {
     chrome.storage.local.get(["data"], function(result){
         var members;
         if(Object.keys(result).length === 0){
@@ -74,20 +116,25 @@ var wipeAllData = () => {
                 location.reload();
                 tools.reloadPage();
                 // update block list
-                postblocklist();
+                blockList();
             }
         });
     }
 }
 
 var addActions = () => {
-    var btns = document.getElementsByClassName('remove-btn');
+    document.addEventListener('change', function(evt){
+        var flag = document.getElementById("block-option-content").contains(evt.target);
+
+        if(flag){
+            var options = tools.readOption();
+            setOptions(options);
+        }
+    })
 
 
     // 차단 목록 버튼 클릭 이벤트 핸들러
-    document.addEventListener('click', function(evt){
-        console.log(evt);
-        
+    document.addEventListener('click', function(evt){        
         // 차단 항목 삭제 버튼
         if(evt.srcElement.className == "remove-btn"){
             var row = evt.path[2];

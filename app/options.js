@@ -1,5 +1,7 @@
-var options = {
-    "hideNotice" : true,
-    "blockPost" : true,
-    "blockComment" : true,
-};
+var options;
+
+var loadOptions = () => {
+    chrome.runtime.sendMessage({msg:"getOptions"}, function(response){
+        options = response;
+    })
+}

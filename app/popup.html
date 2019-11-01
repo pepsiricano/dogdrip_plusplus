@@ -61,7 +61,35 @@
         
         <div class="pure-g" id="block-option-content" style="padding: 1em;" hidden>
             <div class="pure-u-1">
-                공사중...
+                <fieldset id="postOptions">
+                    <legend>글 차단 옵션</legend>
+                    <label class="pure-checkbox">
+                        <input id="enablePostBlock" type="checkbox"> 활성화
+                    </label>
+                    <br>차단 방식
+                    <select id="postBlockMethod">
+                        <option value="hide" selected>제거</option>
+                        <option value="block">가리기</option>
+                    </select>
+                </fieldset>
+                <fieldset id="commentOptions">
+                    <legend>댓글 차단 옵션</legend>
+                    <label class="pure-checkbox">
+                        <input id="enableCommentBlock" type="checkbox"> 활성화
+                    </label>
+                    <br>차단 방식
+                    <select id="commentBlockMethod">
+                        <option value="hide" selected>제거</option>
+                        <option value="block">가리기</option>
+                    </select>
+                </fieldset>
+                <fieldset id="generalOptions">
+                    <legend>기타</legend>
+                    
+                    <label class="pure-checkbox">
+                        <input id="enableNoticeBlock" type="checkbox"> 공지차단
+                    </label>
+                </fieldset>
             </div>
         </div>
 
@@ -92,7 +120,7 @@
 
         <!-- Content Block End -->
         <div class="pure-g" id="button-div" style="padding: 1em;">
-            <button class="pure-button" id="wipeall-btn">초기화</button>
+            <button class="button-error pure-button" id="wipeall-btn">초기화</button>
             <button class="pure-button" id="save-btn">내보내기</button>
             <button class="pure-button" id="load-btn">불러오기</button>
         </div>

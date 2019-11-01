@@ -71,3 +71,9 @@ html, body {
     text-align: center;
     padding:0px;
 }
+
+input[type=checkbox]{
+    vertical-align:middle;
+    position:relative;
+    bottom: 1px;
+}

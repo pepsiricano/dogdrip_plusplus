@@ -28,8 +28,47 @@ chrome.runtime.onMessage.addListener(
             sendResponse(result["data"]);
           }
         });
-        break;
+      break;
+      case "getOptions":
+        chrome.storage.local.get(["options"], (result)=>{
+          if(Object.keys(result).length === 0){
+            // create default option
+            var jsonObj = {};
+            var options = {};
+            options["post"] = {};
+            options["comment"] = {};
+            options["general"] = {};
 
+            options["post"]["enable"] = true;
+            options["comment"]["enable"] = true;
+            options["post"]["method"] = "hide";
+            options["comment"]["method"] = "hide";
+            options["general"]["noticeBlock"] = false;
+
+            jsonObj["options"] = options;
+
+            chrome.storage.local.set(jsonObj, function(){
+              sendResponse(options);
+            })
+          }else{
+            console.log(result["options"]);
+            sendResponse(result["options"]);
+          }
+        });
+      break;
+      case "setOptions":
+        var jsonObj = {};
+        jsonObj["options"] = target;
+        chrome.storage.local.set(jsonObj, () =>{
+          var error = chrome.runtime.lastError;
+          if(error){
+            console.error(error);
+            sendResponse(false);
+          }else{
+            sendResponse(true);
+          }
+        });
+      break;
       case "wipeAll":
         // 모든 차단 리스트, 옵션 삭제
         chrome.storage.local.clear(function(){
@@ -41,7 +80,7 @@ chrome.runtime.onMessage.addListener(
             sendResponse(true);
           }
         });
-        break;
+      break;
 
       case "addBlockMember":
         chrome.storage.local.get(["data"], function(result){
@@ -69,7 +108,7 @@ chrome.runtime.onMessage.addListener(
               }
           }
         });
-        break;
+      break;
 
       case "deleteBlockMember":
         var target = request.data;
@@ -97,8 +136,8 @@ chrome.runtime.onMessage.addListener(
             }
           }
         });
-        break;
-        case "importData":
+      break;
+      case "importData":
           var target = request.data;
 
           chrome.storage.local.clear(function(){
