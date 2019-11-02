@@ -102,8 +102,8 @@ var blockComments = () => {
     }
 };
 
-var addBlockMember = (post, num, mm) => {
-
+var addBlockMember = (post, num = 0, mm = "") => {
+    
     var member_info = {
         date: tools.datenow(),
         member_num: num,
