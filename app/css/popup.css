@@ -1,23 +1,24 @@
+/* popup window style */
 html, body {
-    height: 500px;
+    height: 600px;
     width: 400px;
     background-color:lightgray;
+    display:table;
 }
+
+/* make text unselectable */
 #dpp_title, .pure-menu, #about-content{
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
 }
+
+/* to make menu text bold */
 .pure-menu-link{
     font-weight: 900;
 }
-
-#blocked-list{
-    overflow: hidden;
-    overflow-y: hidden;
-    list-style-type: none;
-}
+/* block item remove button styling */
 .remove-btn{
     color: white;
     border-radius: 5px;
@@ -26,6 +27,8 @@ html, body {
     font-weight:900;
     border: 2px solid rgb(202,60,60);
 }
+
+/* top title styling */
 .title-div{
     background-color:white;
     padding: 1.5em;
@@ -33,16 +36,23 @@ html, body {
     top: 50%;
     transform: translateY(-50%);
 }
+/* to anchor buttons(default,export,import) at bottom */
+#button-div{
+    display: table-footer-group;
+}
+/* memo inputbox styling */
 .memo-input{
     width: 100%;
     box-sizing: border-box;
     border:none;
     background-color:lightgray;
 }
+/* enable scrolling for table body div */
 #tbody{
-    height: 270px;
+    height: 330px;
     overflow-y:scroll;
 }
+/* scrollbar(table body) styling */
 #tbody::-webkit-scrollbar{
     width:10px !important;
 }
@@ -53,6 +63,7 @@ html, body {
 	background: rgba(225, 225, 225, 0.01); 
 }
 
+/* table row size styling */
 #data-table td{
     height: 14px;
 }
@@ -72,6 +83,7 @@ html, body {
     padding:0px;
 }
 
+/* to align pure.css checkbox with text */
 input[type=checkbox]{
     vertical-align:middle;
     position:relative;
