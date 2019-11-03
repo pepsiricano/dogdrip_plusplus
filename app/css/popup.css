@@ -41,7 +41,7 @@ html, body {
 }
 #tbody{
     height: 270px;
-    overflow-y:visible;
+    overflow-y:scroll;
 }
 #tbody::-webkit-scrollbar{
     width:10px !important;
