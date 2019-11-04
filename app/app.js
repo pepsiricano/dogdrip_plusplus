@@ -8,6 +8,16 @@ var tools = {
     datenow : function(){
         var d = new Date();
         return d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate();
+    },
+    appendBlockTR : function(post){
+        Array.from(post.children).forEach((td)=>{td.className += " info-td"});
+        post.innerHTML += '<td class="block-td" colspan="6" style="color:red; text-align:center; font-weight:900;">차단 되었습니다</td>'
+    },
+    appendBlockDIV: function(comment){
+        var height = comment.clientHeight;
+        comment.children[0].className += " info-div";
+
+        comment.innerHTML += '<div class="block-div" style="height:' + height +'px;line-height:' + height +'px;">차단 되었습니다</div>';
     }
 }
 var defineData = () => {
@@ -56,7 +66,10 @@ var init = () =>{
             blockComments();
         // create block button
         createButton();
+
+        // run MutationObserver to detect comment section page changes
         waitComments();
+        hoverBlockedComment();
     });
 };
 
@@ -75,11 +88,15 @@ var blockPosts = () => {
             if(idx > -1){
                 v.blocked_posts.push(post);
                 v.blocked_count++;
-                post.hidden = true;
+                if(options.post.method == "hide")
+                    post.hidden = true;
+                else if(options.post.method == "block"){
+                    tools.appendBlockTR(post);
+                }
             }
             if(admin_number.includes(num) && options.general.noticeBlock){
                 v.blocked_posts.push(post);
-                post.hidden =true;
+                post.hidden = true;
             }
         });
     }
@@ -92,10 +109,17 @@ var blockComments = () => {
         var users = document.getElementsByClassName("comment-list")[0].querySelectorAll(".link-reset");
         users = Array.from(users).map(x => x.className.match(/(\d+)/)[0]);
 
+        v.blocked_comment_count = 0;
+
         for(var i=0; i<comments.length;i++){
             if(local_data.blocked_members.findIndex(x=> x.member_num == users[i]) > -1){
-                comments[i].hidden = true;
                 v.blocked_comment_count++;
+
+                if(options.comment.method=="hide"){
+                    comments[i].hidden = true;
+                }else if(options.comment.method="block"){
+                    tools.appendBlockDIV(comments[i]);
+                }
             }
         }
         updateBlockCounter();
@@ -118,6 +142,7 @@ var addBlockMember = (post, num = 0, mm = "") => {
         else
             console.log("addBlockMember - duplication exists or error occured");
     });
+
     // hide post
     if(document.getElementsByClassName("board-list")[0].contains(post)){
         v.blocked_posts.push(post);
@@ -125,7 +150,24 @@ var addBlockMember = (post, num = 0, mm = "") => {
     }else{
         v.blocked_comment_count++;
     }
-    post.hidden = true;
+    
+    
+    if(post.nodeName == "TR"){
+        // if it is post
+        if(options.post.method == "hide"){
+            post.hidden = true;
+        }
+        else if(options.post.method == "block"){
+            tools.appendBlockTR(post);
+        }
+    }else if (post.nodeName="DIV"){
+        // if it is comment
+        if(options.comment.method=="hide"){
+            post.hidden = true;
+        }else if(options.comment.method="block"){
+            tools.appendBlockDIV(post);
+        }
+    }
 
     updateBlockCounter();
 };
@@ -133,6 +175,7 @@ var addBlockMember = (post, num = 0, mm = "") => {
 var updateBlockCounter = () =>{
     var counter = document.getElementById("pBlockCounter");
     
+    // for post
     if(counter == null){
         counter = document.createElement('b');
         counter.innerHTML = "차단 글 수 - " + v.blocked_count.toString();
@@ -148,6 +191,7 @@ var updateBlockCounter = () =>{
         counter.innerHTML = "차단 글 수 - " + v.blocked_count.toString();
     }
 
+    // for comments
     var comment_counter = document.getElementById("cBlockCounter");
 
     if(document.getElementById("comment_top") != null){
@@ -156,8 +200,8 @@ var updateBlockCounter = () =>{
             comment_counter.innerHTML = "차단 댓글 수 - " + v.blocked_comment_count.toString();
             comment_counter.id = "cBlockCounter";
             comment_counter.setAttribute("style", "color:red; margin-top:35px; margin-left: 15px;");
-
-            document.querySelector("#commentbox div div").appendChild(comment_counter)
+            
+            document.querySelector("#commentbox").prepend(comment_counter)
         }else{
             comment_counter.innerHTML = "차단 댓글 수 - " + v.blocked_comment_count.toString();
         }
@@ -219,5 +263,23 @@ function waitComments(){
         });
     }
 };
+
+function hoverBlockedComment(){
+    var info_div = document.getElementsByClassName("info-div");
+    var block_div = document.getElementsByClassName("block-div");
+
+    Array.from(info_div).forEach((div)=>{
+        div.addEventListener('mouseleave', (evt)=>{
+            evt.srcElement.style.display = "none"
+            evt.srcElement.nextElementSibling.style.display="block";
+        });
+    })
+    Array.from(block_div).forEach((div)=>{
+        div.addEventListener('mouseenter', (evt)=>{
+            evt.srcElement.style.display = "none"
+            evt.srcElement.previousElementSibling.style.display="block";
+        });
+    })
+}
 
 init();

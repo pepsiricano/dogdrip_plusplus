@@ -17,6 +17,9 @@
         "scripts": ["app/background.js"],
         "persistent": false
     },
+    "web_accessible_resources": [
+        "app/inject.css"
+    ],
     "content_scripts":[{
         "matches":[
             "*://www.dogdrip.net/*"
@@ -26,6 +29,9 @@
             "https://www.dogdrip.net/free",
             "https://www.dogdrip.net/communitypage", 
             "https://www.dogdrip.net/notice"
+        ],
+        "css":[
+            "app/css/block.css"
         ],
         "js": [
             "app/options.js",

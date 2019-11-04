@@ -1,0 +1,28 @@
+.info-td{
+    display:none;
+}
+tr:hover > .block-td{
+    display:none;
+}
+tr:hover > .info-td{
+    display:table-cell;
+}
+
+.info-div{
+    display:none;
+}
+
+.block-div{
+    text-align:center;
+    vertical-align:middle;
+    color: red;
+    font-weight: 900;
+
+    border: 1px solid black;
+    border-radius : 3px;
+
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
