@@ -11,7 +11,7 @@ var tools = {
     },
     appendBlockTR : function(post){
         Array.from(post.children).forEach((td)=>{td.className += " info-td"});
-        post.innerHTML += '<td class="block-td" colspan="6" style="color:red; text-align:center; font-weight:900;">차단 되었습니다</td>'
+        post.innerHTML += '<td class="block-td" colspan="6" style="color:#3493ff; text-align:center; font-weight:700;opacity: 0.5;">차단 되었습니다</td>'
     },
     appendBlockDIV: function(comment){
         var height = comment.clientHeight;
