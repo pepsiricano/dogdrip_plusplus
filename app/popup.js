@@ -238,4 +238,11 @@ var addActions = () => {
         }
         input.click()
     });
+
+    // when click dogdrip++ logo at about section
+    document.getElementById('open-github-btn').addEventListener('click', ()=>{
+        chrome.tabs.create({
+            url: "https://github.com/incheon-kim/dogdrip_plusplus"
+        });
+    })
 }
