@@ -11,15 +11,21 @@ var tools = {
     },
     appendBlockTR : function(post){
         Array.from(post.children).forEach((td)=>{td.className += " info-td"});
-        post.innerHTML += '<td class="block-td" colspan="6" style="color:#3493ff; text-align:center; font-weight:700;opacity: 0.5;">차단 되었습니다</td>'
+        post.innerHTML += '<td class="block-td" colspan="6" \
+                           style="color:#3493ff; text-align:center; font-weight:700; opacity: 0.5;">\
+                           차단 되었습니다</td>'
     },
     appendBlockDIV: function(comment){
         var height = comment.clientHeight;
         comment.children[0].className += " info-div";
 
-        comment.innerHTML += '<div class="block-div" style="height:' + height +'px;line-height:' + height +'px;">차단 되었습니다</div>';
+        comment.innerHTML += '<div class="block-div" \
+                              style="height:'+ height +'px;\
+                              line-height:' + height +'px;">\
+                              차단 되었습니다</div>';
     }
 }
+
 var defineData = () => {
     // "local_data" would be synced with Chrome local storage area constantly.
     local_data = {
@@ -136,6 +142,7 @@ var addBlockMember = (post, num = 0, mm = "") => {
 
     local_data.blocked_members.push(member_info);
 
+    // push block information to local storage
     chrome.runtime.sendMessage({msg:"addBlockMember", data: member_info}, (response) =>{
         if(response)
             console.log("addBlockMember - successfully blocked member list updated");
@@ -218,6 +225,7 @@ function createButton(){
                 // add block li
                 ul.innerHTML = ul.innerHTML + "<li id='addBlock'><a target='#' style='color:red;'>차단</a></li>";
 
+                // Event Handler when "차단" is clicked
                 document.getElementById("addBlock").addEventListener('click', (evt) =>{
                     var memo = prompt("메모할 내용?");
 
@@ -234,7 +242,6 @@ function createButton(){
 
                     // when comment section is exists
                     if(document.getElementById("comment_top") != null){
-                        var comments = document.getElementsByClassName("comment-item");
                         var comment_authors = document.getElementsByClassName("comment-list")[0]
                                                       .querySelectorAll(".link-reset");
 
@@ -244,7 +251,8 @@ function createButton(){
                                 // add to local storage list and block post
                                 addBlockMember(author.parentNode.parentNode.parentNode.parentNode.parentNode, num, memo);
                             }
-                        })
+                        });
+                        hoverBlockedComment();
                     }
                 });
             }
@@ -271,13 +279,13 @@ function hoverBlockedComment(){
     Array.from(info_div).forEach((div)=>{
         div.addEventListener('mouseleave', (evt)=>{
             evt.srcElement.style.display = "none"
-            evt.srcElement.nextElementSibling.style.display="block";
+            evt.srcElement.nextElementSibling.style.display= "block";
         });
     })
     Array.from(block_div).forEach((div)=>{
         div.addEventListener('mouseenter', (evt)=>{
             evt.srcElement.style.display = "none"
-            evt.srcElement.previousElementSibling.style.display="block";
+            evt.srcElement.previousElementSibling.style.display= "block";
         });
     })
 }
