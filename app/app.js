@@ -41,7 +41,6 @@ var defineData = () => {
     
     // temp data (would not be synced)
     v = {
-        blocked_posts : Array(),
         posts: Array(),
         blocked_count : 0,
         blocked_comment_count : 0
@@ -69,7 +68,6 @@ var init = () =>{
 
         // run MutationObserver to detect comment section page changes
         waitComments();
-        hoverBlockedComment();
     });
 };
 
@@ -86,8 +84,9 @@ var blockPosts = () => {
                                                     .match(/\d+/g)[0];
             var idx = local_data.blocked_members.findIndex(x => x.member_num == num);
             if(idx > -1){
-                v.blocked_posts.push(post);
+                // +1 post comment counter
                 v.blocked_count++;
+
                 if(options.post.method == "hide")
                     post.hidden = true;
                 else if(options.post.method == "block"){
@@ -95,7 +94,6 @@ var blockPosts = () => {
                 }
             }
             if(admin_number.includes(num) && options.general.noticeBlock){
-                v.blocked_posts.push(post);
                 post.hidden = true;
             }
         });
@@ -104,7 +102,7 @@ var blockPosts = () => {
 };
 
 var blockComments = () => {
-    if(document.getElementsByClassName("comment-item").length != 0){
+    if(document.getElementsByClassName("comment-item").length != 0 && local_data.blocked_members.length !=0){
         var comments = document.getElementsByClassName("comment-item");
         var users = document.getElementsByClassName("comment-list")[0].querySelectorAll(".link-reset");
         users = Array.from(users).map(x => x.className.match(/(\d+)/)[0]);
@@ -122,7 +120,9 @@ var blockComments = () => {
                 }
             }
         }
+        
         updateBlockCounter();
+        hoverBlockedComment();
     }
 };
 
@@ -145,7 +145,6 @@ var addBlockMember = (post, num = 0, mm = "") => {
 
     // hide post
     if(document.getElementsByClassName("board-list")[0].contains(post)){
-        v.blocked_posts.push(post);
         v.blocked_count++;
     }else{
         v.blocked_comment_count++;
@@ -256,7 +255,8 @@ function createButton(){
 function waitComments(){
     if(document.getElementById("comment_top") != null){
         var observer = new MutationObserver((mutations)=>{
-            blockComments();
+            if(options.comment.enable)
+                blockComments();
         });
         observer.observe(document.getElementById("comment_top"),{
             childList: true
