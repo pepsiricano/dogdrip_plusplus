@@ -3,11 +3,11 @@
 개드립넷을 위한 크롬 익스텐션입니다.  
 chrome extension API 를 사용하여 작성된 익스텐션이며, 테스트는 Chromium Edge에서 이뤄졌습니다.  
 크로미움 기반 브라우저에서는 모두 사용가능합니다. **(ex. Chrome, Chromium Edge, Whale, ...)**  
-WebExtension API 를 사용하여 Firefox 사용자들도 사용할 수 있도록 할 예정입니다.
+Firefox에선 완전한 작동을 보장하지 않습니다.
 
 ## Release  
 https://chrome.google.com/webstore/detail/dogdrip++/okpigmccbdjahkelhiaalmgbaffdikpe  
-
+https://addons.mozilla.org/ko/firefox/addon/dogdrippp/
 
 
 ## 기능 안내
