@@ -166,11 +166,11 @@ var addBlockMember = (post, num = 0, mm = "") => {
         else if(options.post.method == "block"){
             tools.appendBlockTR(post);
         }
-    }else if (post.nodeName="DIV"){
+    }else if (post.nodeName=="DIV"){
         // if it is comment
         if(options.comment.method=="hide"){
             post.hidden = true;
-        }else if(options.comment.method="block"){
+        }else if(options.comment.method=="block"){
             tools.appendBlockDIV(post);
         }
     }
