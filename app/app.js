@@ -115,18 +115,18 @@ var blockComments = () => {
 
         v.blocked_comment_count = 0;
 
-        for(var i=0; i<comments.length;i++){
+        let length = comments.length;
+        for (let i = 0; i < length; i++) {
             if(local_data.blocked_members.findIndex(x=> x.member_num == users[i]) > -1){
                 v.blocked_comment_count++;
 
-                if(options.comment.method == "hide"){
+                if (options.comment.method == "hide") {
                     comments[i].hidden = true;
-                }else if(options.comment.method == "block"){
+                } else if(options.comment.method == "block") {
                     tools.appendBlockDIV(comments[i]);
                 }
             }
-        }
-        
+        }        
         updateBlockCounter();
         hoverBlockedComment();
     }
