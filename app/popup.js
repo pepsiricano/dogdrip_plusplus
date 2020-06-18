@@ -68,21 +68,23 @@ var setOptions = (options) => {
 var blockList = () => {
     chrome.storage.local.get(["data"], function(result){
         var members;
-        if(Object.keys(result).length === 0){
+        if (Object.keys(result).length === 0) {
             members = [];
-        }else{
+        } else {
             members = result["data"].blocked_members;
             var i,j;
             console.log(members);
             var table = document.querySelector("#data-table>tbody");
-            if(members.length != 0){
-                var properties = ['date', 'member_num', 'memo']
-                for(i=0; i<members.length; i++){
+            if (members.length != 0) {
+                var properties = ['date', 'member_num', 'memo'];
+                let members_length = members.length;;
+                let properties_length = properties.length;
+                for (i = 0; i < members_length; i++){
                     var row = document.createElement('tr');
-                    for(j=0; j<=properties.length; j++){
+                    for (j = 0; j <= properties_length; j++){
                         var cell = document.createElement('td');
                         
-                        if(j === 2){
+                        if (j === 2) {
                             // memo
                             var input = document.createElement('input');
                             input.value = members[i][properties[j]];
@@ -90,14 +92,13 @@ var blockList = () => {
 
                             cell.className = "input-td";
                             cell.appendChild(input);
-                        }else if(j === 3){
+                        } else if (j === 3) {
                             //remove btn
                             var btn = document.createElement('button');
                             btn.className = "remove-btn";
                             btn.innerHTML = "X";
                             cell.appendChild(btn);
-                        }
-                        else{
+                        } else {
                             cell.innerHTML = members[i][properties[j]];
                         }
                         row.appendChild(cell);
