@@ -11,7 +11,8 @@ chrome.runtime.onMessage.addListener(
     if(request.data != undefined){
       target = request.data;
     }
-
+    console.log('=========');
+    console.log(request.msg);
     // select message
     switch(request.msg){
       case "init":

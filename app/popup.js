@@ -11,18 +11,19 @@ window.onload = function(){
 }
 
 //var content = document.getElementById('content-div');
-
-var tools = {
-    datenow : function(){
+class Tool {
+    NowDate() {
         var d = new Date();
         return d.getFullYear() + "/" 
              + d.getMonth() + "/" 
              + d.getDate();
-    },
-    reloadPage : function(){
+    }
+
+    ReloadPage() {
         chrome.tabs.reload();
-    }, 
-    readOption : function(){
+    }
+
+    ReadOption() {
         var options = {};
         var post = {};
         var comment = {};
@@ -43,6 +44,7 @@ var tools = {
     }
 }
 
+
 var loadOptions = () => {
     chrome.runtime.sendMessage({msg:"getOptions"}, function(response){
         var options = response;
@@ -60,7 +62,7 @@ var loadOptions = () => {
 var setOptions = (options) => {
     chrome.runtime.sendMessage({msg: "setOptions", data: options}, function(response){
         if(response){
-            tools.reloadPage();
+            new Tool().ReloadPage();
         }
     });
 }
@@ -115,7 +117,7 @@ var wipeAllData = () => {
         chrome.runtime.sendMessage({msg: "wipeAll"}, (result)=>{
             if(result){
                 location.reload();
-                tools.reloadPage();
+                new Tool().ReloadPage();
                 // update block list
                 blockList();
             }
@@ -128,7 +130,7 @@ var addActions = () => {
         var flag = document.getElementById("block-option-content").contains(evt.target);
 
         if(flag){
-            var options = tools.readOption();
+            var options = new Tool().ReadOption();
             setOptions(options);
         }
     })
@@ -146,7 +148,7 @@ var addActions = () => {
             chrome.runtime.sendMessage({msg:"deleteBlockMember", data: num},function(result){
                 console.log(result);
                 location.reload();
-                tools.reloadPage();
+                new Tool().ReloadPage();
             });
         }
 
@@ -203,7 +205,7 @@ var addActions = () => {
             });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(bl);
-            a.download = tools.datenow() + '-export-data.json';
+            a.download = new Tool().NowDate() + '-export-data.json';
             a.hidden = true;
             document.body.appendChild(a);
             a.innerHTML = "";
@@ -227,7 +229,7 @@ var addActions = () => {
                 chrome.runtime.sendMessage({msg:"importData", data: jsonObj},function(response){
                     if(response){
                         location.reload();
-                        tools.reloadPage();
+                        new Tool().ReloadPage();
                     }else{
                         console.log(response);
                         alert("error occured");
