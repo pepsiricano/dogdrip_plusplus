@@ -35,6 +35,9 @@ class Tool {
         comment["method"] = document.getElementById("commentBlockMethod").value;
 
         general["noticeBlock"] = document.getElementById("enableNoticeBlock").checked;
+        general["horseBlock"] = document.getElementById("enableHorseBlock").checked;
+        general["r18Block"] = document.getElementById("enableR18Block").checked;
+
         options["post"] = post;
         options["comment"] = comment;
         options["general"] = general;
@@ -56,6 +59,8 @@ var loadOptions = () => {
         document.getElementById("commentBlockMethod").value = options.comment.method;
 
         document.getElementById("enableNoticeBlock").checked = options.general.noticeBlock;
+        document.getElementById("enableHorseBlock").checked = options.general.horseBlock;
+        document.getElementById("enableR18Block").checked = options.general.r18Block;
     })
 };
 

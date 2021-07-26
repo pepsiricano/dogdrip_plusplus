@@ -67,8 +67,12 @@ var init = () =>{
         // block posts
         if (options.post.enable)
             blockPosts();
-        if (options.comment.enable)
+        if (options.comment.enable) 
             blockComments();
+        if (options.general.horseBlock) 
+            horseBlock();
+        if (options.general.r18Block) 
+            r18Block();
         // create block button
         createButton();
 
@@ -131,6 +135,32 @@ var blockComments = () => {
         hoverBlockedComment();
     }
 };
+
+const horseBlock = () => {
+    if(v.posts.length != 0){
+        v.posts.forEach((post) => {
+            const title = post.querySelector("td.title").children[0].children[0].children[0].innerText;
+            if(title.indexOf("🐴") !== -1) {
+                post.hidden = true;
+            }
+        });
+    }
+    updateBlockCounter();
+}
+
+
+const r18Block = () => {
+    if(v.posts.length != 0){
+        v.posts.forEach((post) => {
+            const title = post.querySelector("td.title").children[0].children[0].children[0].innerText;
+            console.log(title);
+            if(title.indexOf("ㅇㅎ") !== -1 || title.indexOf("약후") !== -1 || title.indexOf("후방") !== -1) {
+                post.hidden = true;
+            }
+        });
+    }
+    updateBlockCounter();
+}
 
 var addBlockMember = (post, num = 0, mm = "") => {
     
