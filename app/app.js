@@ -140,7 +140,7 @@ const horseBlock = () => {
     if(v.posts.length != 0){
         v.posts.forEach((post) => {
             const title = post.querySelector("td.title").children[0].children[0].children[0].innerText;
-            if(title.indexOf("🐴") !== -1) {
+            if(title.indexOf("🐴") !== -1 || title.indexOf("말머리") !== -1 || title.indexOf("ㅁㅁㄹ") !== -1) {
                 post.hidden = true;
             }
         });
@@ -154,7 +154,7 @@ const r18Block = () => {
         v.posts.forEach((post) => {
             const title = post.querySelector("td.title").children[0].children[0].children[0].innerText;
             console.log(title);
-            if(title.indexOf("ㅇㅎ") !== -1 || title.indexOf("약후") !== -1 || title.indexOf("후방") !== -1) {
+            if(title.indexOf("ㅇㅎ") !== -1 || title.indexOf("약후") !== -1 || title.indexOf("ㅎㅂ") !== -1 || title.indexOf("후방") !== -1) {
                 post.hidden = true;
             }
         });
